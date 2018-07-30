@@ -21,10 +21,10 @@ class Message : NSData {
   var time: NSObject!
     
   init(text: String, displayName: String) {
-    super.init()
+    (super as NSData).init()
     self.text = text
     self.displayName = displayName
-    self.time = FIRServerValue.timestamp()
+    self.time = FIRServerValue.timestamp() as NSObject
   }
     
   convenience override init() {
@@ -35,8 +35,8 @@ class Message : NSData {
     fatalError("init(coder:) has not been implemented")
   }
 
-  func toDictionary() -> [String : AnyObject!] {
-    let json = ["text": text, "displayName": displayName, "time": time]
+  func toDictionary() -> [String : AnyObject?] {
+    let json = ["text": text, "displayName": displayName, "time": time] as [String : Any]
     return json
   }
 }
