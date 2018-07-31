@@ -44,15 +44,22 @@ UITabBarControllerDelegate {
     let title = String(ptabBarController.selectedViewController!
       .tabBarItem.title!)
     let tableView : UITableView = channelViewDict[title!]!
-    fbLog?.log(inbox, message: "Switching channel to '" + title + "'")
+    fbLog?.log(inbox, message: "Switching channel to '" + title! + "'")
     query.observe(.value, with : { snapshot in
       self.msgs = []
-      for entry in snapshot.children {
-        let msg = Message(text: String((entry as AnyObject).value!.object(forKey: "text")!),
-          displayName: String(entry.value!.object(forKey: "displayName")!))
-        msg.time = String(entry.value!.object(forKey: "time")!)
+        
+      let enumerator = snapshot.children
+      
+      while let entry = enumerator.nextObject() as? FIRDataSnapshot {
+        let dictionary = entry.value as! Dictionary<String, AnyObject>
+        let msg = Message(
+            text: dictionary["text"] as! String,
+            displayName: dictionary["displayName"] as! String
+        )
+        msg.time = dictionary["time"] as! NSObject
         self.msgs.append(msg)
       }
+    
       tableView.reloadData()
       if (snapshot.childrenCount > 0) {
         let indexPath = IndexPath(row: self.msgs.count-1, section: 0)
@@ -72,15 +79,15 @@ UITabBarControllerDelegate {
                  cellForRowAt indexPath: IndexPath)
     -> UITableViewCell {
       var cell = tableView.dequeueReusableCell(
-        withIdentifier: NSStringFromClass(MessageCell), for: indexPath) as! MessageCell
+        withIdentifier: NSStringFromClass(MessageCell.self), for: indexPath) as! MessageCell
       cell = MessageCell(style: UITableViewCellStyle.default,
-                         reuseIdentifier: NSStringFromClass(MessageCell))
+                         reuseIdentifier: NSStringFromClass(MessageCell.self))
       if msgs.count > indexPath.row {
         let msg = msgs[indexPath.row]
         cell.body.text = msg.text
         cell.details.text = msg.displayName + ", "
           + dayFormatter.string(
-            from: Date(timeIntervalSince1970: Double(msg.time as! String)!/1000))
+            from: Date(timeIntervalSince1970: msg.time as! Double/1000))
       }
       return cell
   }

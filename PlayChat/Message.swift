@@ -21,7 +21,7 @@ class Message : NSData {
   var time: NSObject!
     
   init(text: String, displayName: String) {
-    (super as NSData).init()
+    super.init()
     self.text = text
     self.displayName = displayName
     self.time = FIRServerValue.timestamp() as NSObject
@@ -35,8 +35,8 @@ class Message : NSData {
     fatalError("init(coder:) has not been implemented")
   }
 
-  func toDictionary() -> [String : AnyObject?] {
-    let json = ["text": text, "displayName": displayName, "time": time] as [String : Any]
+  func toDictionary() -> [String : AnyObject] {
+    let json = ["text": text, "displayName": displayName, "time": time] as [String : AnyObject]
     return json
   }
 }

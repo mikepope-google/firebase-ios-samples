@@ -21,7 +21,7 @@ class LogEntry : NSData {
   var time: NSObject!
     
   init(tag: String, log: String) {
-    (super as NSData).init()
+    super.init()
     self.tag = tag
     self.log = log
     self.time = FIRServerValue.timestamp() as NSObject
@@ -35,8 +35,8 @@ class LogEntry : NSData {
     fatalError("init(coder:) has not been implemented")
   }
     
-  func toDictionary() -> [String : AnyObject?] {
-    let json = ["tag": tag, "log": log, "time": time] as [String : Any]
+  func toDictionary() -> [String : AnyObject] {
+    let json = ["tag": tag, "log": log, "time": time] as [String : AnyObject]
     return json
   }
 }

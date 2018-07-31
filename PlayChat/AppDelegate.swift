@@ -42,7 +42,7 @@ UITextFieldDelegate {
     launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     var configureError: NSError?
     GGLContext.sharedInstance().configureWithError(&configureError)
-    assert(configureError == nil, "Config error: \(configureError)")
+    assert(configureError == nil, "Config error: \(String(describing: configureError))")
     
     let path = Bundle.main.path(forResource: "Info", ofType: "plist")!
     let dict = NSDictionary(contentsOfFile: path) as! [String: AnyObject]
@@ -98,7 +98,7 @@ UITextFieldDelegate {
     tableView.dataSource = msgViewController
     tableView.register(
       MessageCell.self,
-      forCellReuseIdentifier: NSStringFromClass(MessageCell))
+      forCellReuseIdentifier: NSStringFromClass(MessageCell.self))
     tableView.translatesAutoresizingMaskIntoConstraints = true
     channelView.view.addSubview(tableView)
     msgViewController!.channelViewDict[title] = tableView
@@ -139,8 +139,9 @@ UITextFieldDelegate {
   func applicationDidBecomeActive(_ application: UIApplication) {}
   func applicationWillTerminate(_ application: UIApplication) {}
   
+    
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
-              withError error: NSError!) {
+              withError error: Error!) {
     if let error = error {
       print("signIn error : \(error.localizedDescription)")
       return
