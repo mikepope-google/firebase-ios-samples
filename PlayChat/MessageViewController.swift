@@ -53,7 +53,7 @@ UITabBarControllerDelegate {
         let enumerator = snapshot.children
 
         while let entry = enumerator.nextObject() as? DataSnapshot {
-          let dictionary = entry.value as! Dictionary<String, AnyObject>
+          let dictionary = entry.value as! [String: AnyObject]
           let msg = Message(
               text: dictionary["text"] as! String,
               displayName: dictionary["displayName"] as! String
