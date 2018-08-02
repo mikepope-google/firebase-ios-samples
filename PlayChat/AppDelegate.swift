@@ -21,27 +21,27 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate,
   UITableViewDelegate,
 UITextFieldDelegate {
-  let IBX : String = "inbox"
-  let CHS : String = "channels"
-  let REQLOG : String = "requestLogger"
+  let IBX: String = "inbox"
+  let CHS: String = "channels"
+  let REQLOG: String = "requestLogger"
   var maxMessages: UInt = 20
-  
+
   var window: UIWindow?
   var storyboard: UIStoryboard?
   var navigationController: UINavigationController?
   var tabBarController: UITabBarController!
-  var msgViewController : MessageViewController?
-  
+  var msgViewController: MessageViewController?
+
   var user: GIDGoogleUser!
   var inbox: String?
   var ref: DatabaseReference!
   var msgs: [Message] = []
-  var channelViewDict: [String : UITableView] = [:]
+  var channelViewDict: [String: UITableView] = [: ]
   var fbLog: FirebaseLogger?
-  
+
   func application(_ application: UIApplication, didFinishLaunchingWithOptions
     launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-    
+
     let path = Bundle.main.path(forResource: "Info", ofType: "plist")!
     let dict = NSDictionary(contentsOfFile: path) as! [String: AnyObject]
     let channels = dict["Channels"] as! String
@@ -56,41 +56,41 @@ UITextFieldDelegate {
       as! UITabBarController
     msgViewController = MessageViewController(maxMessages: maxMessages)
     tabBarController?.delegate = msgViewController
-    
+
     tabBarController?.viewControllers = [buildChannelView(chanArray[0])]
-    for i in 1...chanArray.count-1 {
+    for i in 1...chanArray.count - 1 {
       tabBarController?.viewControllers?.append(buildChannelView(chanArray[i]))
     }
-    
+
     FirebaseApp.configure()
-    
+
     GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
     GIDSignIn.sharedInstance().delegate = self
-    
+
     return true
   }
-  
-  func buildChannelView(_ title : String) -> UIViewController {
+
+  func buildChannelView(_ title: String) -> UIViewController {
     let channelView = UIViewController()
-    let fontBold:UIFont = UIFont(name: "HelveticaNeue-Bold", size: 14)!
+    let fontBold: UIFont = UIFont(name: "HelveticaNeue-Bold", size: 14)!
     channelView.tabBarItem.title = title
     channelView.tabBarItem.setTitleTextAttributes(
       [
         NSAttributedStringKey.foregroundColor: UIColor.gray,
-        NSAttributedStringKey.font: fontBold
+        NSAttributedStringKey.font: fontBold,
       ], for: UIControlState())
     channelView.tabBarItem.setTitleTextAttributes(
       [
         NSAttributedStringKey.foregroundColor: UIColor.black,
-        NSAttributedStringKey.font: fontBold
+        NSAttributedStringKey.font: fontBold,
       ], for: UIControlState.selected)
-    
-    let tableView:UITableView = UITableView()
+
+    let tableView: UITableView = UITableView()
     let height = channelView.view.frame.height
     let width = channelView.view.frame.width
     print(height)
     print(width)
-    tableView.frame = CGRect(x: 0, y: 20, width: width, height: height - 110);
+    tableView.frame = CGRect(x: 0, y: 20, width: width, height: height - 110)
     tableView.rowHeight = 50
     tableView.estimatedRowHeight = 40
     tableView.delegate = self
@@ -101,17 +101,17 @@ UITextFieldDelegate {
     tableView.translatesAutoresizingMaskIntoConstraints = true
     channelView.view.addSubview(tableView)
     msgViewController!.channelViewDict[title] = tableView
-    
-    let signOutButton:UIButton = UIButton(
+
+    let signOutButton: UIButton = UIButton(
       frame: CGRect(x: 5, y: height - 80, width: 55, height: 20))
     signOutButton.setTitle(" << ", for: UIControlState())
     signOutButton.titleLabel?.textColor = UIColor.cyan
 
-    signOutButton.addTarget(self, action: #selector(AppDelegate.signOut(_:)),
+    signOutButton.addTarget(self, action: #selector(AppDelegate.signOut(_: )),
                             for: .touchUpInside)
     channelView.view.addSubview(signOutButton)
-    
-    let textField:UITextField = UITextField(
+
+    let textField: UITextField = UITextField(
       frame: CGRect(x: 60, y: height - 80, width: 300, height: 20))
     textField.attributedPlaceholder = NSAttributedString(
       string: "Enter your message",
@@ -122,29 +122,29 @@ UITextFieldDelegate {
     textField.becomeFirstResponder()
     textField.delegate = self
     channelView.view.addSubview(textField)
-    
+
     return channelView
   }
-  
+
   func application(_ application: UIApplication, open url: URL,
                    options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
     return GIDSignIn.sharedInstance().handle(url,
-                                             sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
-                                             annotation: [:])
+                                             sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                             annotation: [: ])
   }
   func applicationWillResignActive(_ application: UIApplication) {}
   func applicationDidEnterBackground(_ application: UIApplication) {}
   func applicationWillEnterForeground(_ application: UIApplication) {}
   func applicationDidBecomeActive(_ application: UIApplication) {}
   func applicationWillTerminate(_ application: UIApplication) {}
-  
+
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
               withError error: Error?) {
     if let error = error {
       print("signIn error : \(error.localizedDescription)")
       return
     }
-    
+
     if (self.user == nil) {
       self.user = user
       guard let authentication = user.authentication else { return }
@@ -174,8 +174,8 @@ UITextFieldDelegate {
   func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
     // Perform any operations when the user disconnects from the app.
   }
-  
-  @objc func signOut(_ sender:UIButton) {
+
+  @objc func signOut(_ sender: UIButton) {
     fbLog!.log(inbox, message: "Signed out")
     let firebaseAuth = Auth.auth()
     do {
@@ -192,7 +192,7 @@ UITextFieldDelegate {
     }
     user = nil
   }
-  
+
   func requestLogger() {
     ref.child(IBX + "/" + inbox!).removeValue()
     ref.child(IBX + "/" + inbox!)
@@ -208,14 +208,14 @@ UITextFieldDelegate {
       })
     ref.child(REQLOG).childByAutoId().setValue(inbox)
   }
-  
+
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     if (msgs.count == Int(maxMessages)) {
       msgs.removeFirst()
     }
     let channel = tabBarController!.selectedViewController!
       .tabBarItem.title! as String
-    let msg : Message = Message(text : textField.text!,
+    let msg: Message = Message(text: textField.text!,
                                 displayName: user.profile.name)
     let entry = ref.child(CHS).child(channel).childByAutoId()
     entry.setValue(msg.toDictionary())
