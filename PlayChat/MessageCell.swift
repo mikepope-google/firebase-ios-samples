@@ -47,7 +47,17 @@ class MessageCell: UITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        body.frame = CGRect(x: padding, y: padding, width: frame.width - padding * 2, height: frame.height - 6 * padding)
-        details.frame = CGRect(x: padding, y: frame.height - 6 * padding, width: frame.width - padding * 2, height: 6 * padding)
+        body.frame = CGRect(
+          x: padding,
+          y: padding,
+          width: frame.width - padding * 2,
+          height: frame.height - 6 * padding
+        )
+        details.frame = CGRect(
+          x: padding,
+          y: frame.height - 6 * padding,
+          width: frame.width - padding * 2,
+          height: 6 * padding
+        )
     }
 }

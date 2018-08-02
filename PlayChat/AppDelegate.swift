@@ -128,9 +128,11 @@ UITextFieldDelegate {
 
   func application(_ application: UIApplication, open url: URL,
                    options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
-    return GIDSignIn.sharedInstance().handle(url,
-                                             sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
-                                             annotation: [: ])
+    return GIDSignIn.sharedInstance().handle(
+      url,
+      sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+      annotation: [: ]
+    )
   }
   func applicationWillResignActive(_ application: UIApplication) {}
   func applicationDidEnterBackground(_ application: UIApplication) {}
