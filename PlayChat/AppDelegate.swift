@@ -107,8 +107,7 @@ UITextFieldDelegate {
     signOutButton.setTitle(" << ", for: UIControlState())
     signOutButton.titleLabel?.textColor = UIColor.cyan
 
-    signOutButton.addTarget(self, action: #selector(AppDelegate.signOut(_: )),
-                            for: .touchUpInside)
+    signOutButton.addTarget(self, action: #selector(AppDelegate.signOut(_: )), for: .touchUpInside)
     channelView.view.addSubview(signOutButton)
 
     let textField: UITextField = UITextField(
@@ -161,9 +160,7 @@ UITextFieldDelegate {
         print("Signed-in to Firebase as \(String(describing: authResult?.user.displayName))")
         let nav = UINavigationController(
           rootViewController: self.tabBarController!)
-        self.window?.rootViewController?.present(
-          nav,
-          animated: true, completion: nil)
+        self.window?.rootViewController?.present( nav, animated: true, completion: nil)
         self.ref = Database.database().reference()
         self.inbox = "client-" + String(abs(self.user.userID.hash))
 
@@ -187,10 +184,8 @@ UITextFieldDelegate {
       let signInController = self.storyboard!
         .instantiateViewController(withIdentifier: "Signin") as UIViewController
       let nav = UINavigationController(rootViewController: signInController)
-      window?.rootViewController?.present(nav, animated: false,
-                                                        completion: nil)
-      window?.rootViewController?.dismiss(animated: false,
-                                                                completion: nil)
+      window?.rootViewController?.present(nav, animated: false, completion: nil)
+      window?.rootViewController?.dismiss(animated: false, completion: nil)
     } catch let error as NSError {
       print ("Error signing out: %@", error)
     }

@@ -45,28 +45,33 @@ UITabBarControllerDelegate {
       .tabBarItem.title!)
     let tableView: UITableView = channelViewDict[title]!
     fbLog?.log(inbox, message: "Switching channel to '" + title + "'")
-    query.observe(.value, with: { snapshot in
-      self.msgs = []
+    query.observe(
+      .value,
+      with: { snapshot in
+        self.msgs = []
 
-      let enumerator = snapshot.children
+        let enumerator = snapshot.children
 
-      while let entry = enumerator.nextObject() as? DataSnapshot {
-        let dictionary = entry.value as! Dictionary<String, AnyObject>
-        let msg = Message(
-            text: dictionary["text"] as! String,
-            displayName: dictionary["displayName"] as! String
-        )
-        msg.time = dictionary["time"] as! NSObject
-        self.msgs.append(msg)
-      }
+        while let entry = enumerator.nextObject() as? DataSnapshot {
+          let dictionary = entry.value as! Dictionary<String, AnyObject>
+          let msg = Message(
+              text: dictionary["text"] as! String,
+              displayName: dictionary["displayName"] as! String
+          )
+          msg.time = dictionary["time"] as! NSObject
+          self.msgs.append(msg)
+        }
 
-      tableView.reloadData()
-      if (snapshot.childrenCount > 0) {
-        let indexPath = IndexPath(row: self.msgs.count - 1, section: 0)
-        tableView.scrollToRow(at: indexPath,
-          at: UITableViewScrollPosition.bottom, animated: false)
-      }
-    }) { (error) in
+        tableView.reloadData()
+        if (snapshot.childrenCount > 0) {
+          let indexPath = IndexPath(row: self.msgs.count - 1, section: 0)
+          tableView.scrollToRow(
+            at: indexPath,
+            at: UITableViewScrollPosition.bottom,
+            animated: false
+          )
+        }
+      }) { (error) in
       print(error)
     }
   }
