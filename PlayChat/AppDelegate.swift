@@ -215,8 +215,7 @@ UITextFieldDelegate {
     }
     let channel = tabBarController!.selectedViewController!
       .tabBarItem.title! as String
-    let msg: Message = Message(text: textField.text!,
-                                displayName: user.profile.name)
+    let msg: Message = Message(text: textField.text!, displayName: user.profile.name)
     let entry = ref.child(CHS).child(channel).childByAutoId()
     entry.setValue(msg.toDictionary())
     textField.text = ""
