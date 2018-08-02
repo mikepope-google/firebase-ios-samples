@@ -126,8 +126,11 @@ UITextFieldDelegate {
     return channelView
   }
 
-  func application(_ application: UIApplication, open url: URL,
-                   options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
+  func application(
+    _ application: UIApplication,
+    open url: URL,
+    options: [UIApplicationOpenURLOptionsKey: Any]
+  ) -> Bool {
     return GIDSignIn.sharedInstance().handle(
       url,
       sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
@@ -140,8 +143,7 @@ UITextFieldDelegate {
   func applicationDidBecomeActive(_ application: UIApplication) {}
   func applicationWillTerminate(_ application: UIApplication) {}
 
-  func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
-              withError error: Error?) {
+  func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
     if let error = error {
       print("signIn error : \(error.localizedDescription)")
       return
