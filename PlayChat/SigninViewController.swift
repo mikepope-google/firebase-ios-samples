@@ -19,7 +19,7 @@ import UIKit
 
 @objc(Signin)
 class SigninViewController: UIViewController, GIDSignInUIDelegate {
-  @IBOutlet weak var signInButton: GIDSignInButton!
+  @IBOutlet weak private var signInButton: GIDSignInButton!
 
   override func viewDidLoad() {
     super.viewDidLoad()
