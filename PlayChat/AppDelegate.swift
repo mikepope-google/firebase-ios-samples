@@ -176,7 +176,8 @@ UITextFieldDelegate {
     // Perform any operations when the user disconnects from the app.
   }
 
-  @objc func signOut(_ sender: UIButton) {
+  @objc
+  func signOut(_ sender: UIButton) {
     fbLog!.log(inbox, message: "Signed out")
     let firebaseAuth = Auth.auth()
     do {
