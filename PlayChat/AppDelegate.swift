@@ -153,10 +153,10 @@ UITextFieldDelegate {
       guard let authentication = user.authentication else { return }
       let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
                                                      accessToken: authentication.accessToken)
-        Auth.auth().signInAndRetrieveData(with: credential) { (authResult, error) in
-            if error != nil {
-                return
-            }
+      Auth.auth().signInAndRetrieveData(with: credential) { (authResult, error) in
+          if error != nil {
+              return
+          }
         print("Signed-in to Firebase as \(String(describing: authResult?.user.displayName))")
         let nav = UINavigationController(
           rootViewController: self.tabBarController!)
