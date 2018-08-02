@@ -63,7 +63,7 @@ UITabBarControllerDelegate {
         }
 
         tableView.reloadData()
-        if (snapshot.childrenCount > 0) {
+        if snapshot.childrenCount > 0 {
           let indexPath = IndexPath(row: self.msgs.count - 1, section: 0)
           tableView.scrollToRow(
             at: indexPath,

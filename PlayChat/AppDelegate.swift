@@ -148,7 +148,7 @@ UITextFieldDelegate {
       return
     }
 
-    if (self.user == nil) {
+    if self.user == nil {
       self.user = user
       guard let authentication = user.authentication else { return }
       let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
@@ -198,7 +198,7 @@ UITextFieldDelegate {
     ref.child(IBX + "/" + inbox!)
       .observe(.value, with: {snapshot in
         print(self.inbox!)
-        if (snapshot.exists()) {
+        if snapshot.exists() {
           self.fbLog = FirebaseLogger(ref: self.ref, path: self.IBX + "/"
             + String(describing: snapshot.value!) + "/logs")
           self.ref.child(self.IBX + "/" + self.inbox!).removeAllObservers()
@@ -210,7 +210,7 @@ UITextFieldDelegate {
   }
 
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    if (msgs.count == Int(maxMessages)) {
+    if msgs.count == Int(maxMessages) {
       msgs.removeFirst()
     }
     let channel = tabBarController!.selectedViewController!
