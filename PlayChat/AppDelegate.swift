@@ -77,12 +77,12 @@ UITextFieldDelegate {
     channelView.tabBarItem.setTitleTextAttributes(
       [
         NSAttributedStringKey.foregroundColor: UIColor.gray,
-        NSAttributedStringKey.font: fontBold,
+        NSAttributedStringKey.font: fontBold
       ], for: UIControlState())
     channelView.tabBarItem.setTitleTextAttributes(
       [
         NSAttributedStringKey.foregroundColor: UIColor.black,
-        NSAttributedStringKey.font: fontBold,
+        NSAttributedStringKey.font: fontBold
       ], for: UIControlState.selected)
 
     let tableView: UITableView = UITableView()
