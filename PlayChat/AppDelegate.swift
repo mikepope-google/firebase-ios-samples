@@ -24,12 +24,13 @@ UITextFieldDelegate {
   let IBX: String = "inbox"
   let CHS: String = "channels"
   let REQLOG: String = "requestLogger"
-  var maxMessages: UInt = 20
+  var chanArray: [String] = []
+  var maxMessages: UInt?
 
   var window: UIWindow?
   var storyboard: UIStoryboard?
   var navigationController: UINavigationController?
-  var tabBarController: UITabBarController!
+  var tabBarController: UITabBarController?
   var msgViewController: MessageViewController?
 
   var user: GIDGoogleUser!
@@ -42,19 +43,23 @@ UITextFieldDelegate {
   func application(_ application: UIApplication, didFinishLaunchingWithOptions
     launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-    let path = Bundle.main.path(forResource: "Info", ofType: "plist")!
-    let dict = NSDictionary(contentsOfFile: path) as! [String: AnyObject]
-    let channels = dict["Channels"] as! String
-    let chanArray = channels.components(separatedBy: ",")
-    maxMessages = dict["MaxMessages"] as! UInt
+    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
+      if let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
+        chanArray = dict["Channels"]!.components(separatedBy: ",")
+        maxMessages = dict["MaxMessages"]! as? UInt
+      }
+    } else {
+      print("Couldn't read 'Info.plist' file")
+    }
 
     storyboard = UIStoryboard(name: "Main", bundle: nil)
     navigationController = storyboard!.instantiateInitialViewController()
       as? UINavigationController
+
     tabBarController = self.storyboard!
-      .instantiateViewController(withIdentifier: "TabBarController")
-      as! UITabBarController
-    msgViewController = MessageViewController(maxMessages: maxMessages)
+        .instantiateViewController(withIdentifier: "TabBarController")
+        as? UITabBarController
+    msgViewController = MessageViewController(maxMessages: maxMessages!)
     tabBarController?.delegate = msgViewController
 
     tabBarController?.viewControllers = [buildChannelView(chanArray[0])]
@@ -142,7 +147,7 @@ UITextFieldDelegate {
   func applicationDidBecomeActive(_ application: UIApplication) {}
   func applicationWillTerminate(_ application: UIApplication) {}
 
-  func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
+  func sign(_ signIn: GIDSignIn, didSignInFor user: GIDGoogleUser, withError error: Error?) {
     if let error = error {
       print("signIn error : \(error.localizedDescription)")
       return
@@ -172,7 +177,7 @@ UITextFieldDelegate {
     }
   }
 
-  func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+  func sign(_ signIn: GIDSignIn, didDisconnectWith user: GIDGoogleUser, withError error: Error) {
     // Perform any operations when the user disconnects from the app.
   }
 
@@ -210,7 +215,7 @@ UITextFieldDelegate {
   }
 
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    if msgs.count == Int(maxMessages) {
+    if msgs.count == Int(maxMessages!) {
       msgs.removeFirst()
     }
     let channel = tabBarController!.selectedViewController!
