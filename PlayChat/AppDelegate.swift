@@ -43,11 +43,10 @@ UITextFieldDelegate {
   func application(_ application: UIApplication, didFinishLaunchingWithOptions
     launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-    if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
-      if let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
-        chanArray = dict["Channels"]!.components(separatedBy: ",")
-        maxMessages = dict["MaxMessages"]! as? UInt
-      }
+    if let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+       let dictionary = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
+      chanArray = dictionary["Channels"]!.components(separatedBy: ",")
+      maxMessages = dictionary["MaxMessages"]! as? UInt
     } else {
       print("Couldn't read 'Info.plist' file")
     }
