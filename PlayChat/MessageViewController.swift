@@ -53,13 +53,17 @@ UITabBarControllerDelegate {
         let enumerator = snapshot.children
 
         while let entry = enumerator.nextObject() as? DataSnapshot {
-          let dictionary = entry.value as! [String: AnyObject]
-          let msg = Message(
-              text: dictionary["text"] as! String,
-              displayName: dictionary["displayName"] as! String
-          )
-          msg.time = dictionary["time"] as! NSObject
-          self.msgs.append(msg)
+          if let dictionary = entry.value as? [String: AnyObject],
+             let text = dictionary["text"] as? String,
+             let displayName = dictionary["displayName"] as? String,
+             let time = dictionary["time"] as? NSObject {
+            let msg = Message(
+                text: text as String,
+                displayName: displayName as String
+            )
+            msg.time = time as NSObject
+            self.msgs.append(msg)
+          }
         }
 
         tableView.reloadData()
@@ -81,20 +85,27 @@ UITabBarControllerDelegate {
   }
 
   func tableView(_ tableView: UITableView,
-                 cellForRowAt indexPath: IndexPath)
-    -> UITableViewCell {
-      var cell = tableView.dequeueReusableCell(
-        withIdentifier: NSStringFromClass(MessageCell.self), for: indexPath) as! MessageCell
+                 cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    var cell: MessageCell
+    if let tmpCell = tableView.dequeueReusableCell(
+      withIdentifier: NSStringFromClass(MessageCell.self), for: indexPath) as? MessageCell {
+      cell = tmpCell
+    } else {
       cell = MessageCell(style: UITableViewCellStyle.default,
                          reuseIdentifier: NSStringFromClass(MessageCell.self))
-      if msgs.count > indexPath.row {
-        let msg = msgs[indexPath.row]
-        cell.body.text = msg.text
+    }
+
+    if msgs.count > indexPath.row {
+      let msg = msgs[indexPath.row]
+      cell.body.text = msg.text
+      if let time = msg.time as? Double {
         cell.details.text = msg.displayName + ", "
           + dayFormatter.string(
-            from: Date(timeIntervalSince1970: msg.time as! Double / 1_000))
+            from: Date(timeIntervalSince1970: time / 1_000))
       }
-      return cell
+    }
+
+    return cell
   }
 
   func tableView(_ tableView: UITableView,
